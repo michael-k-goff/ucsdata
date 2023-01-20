@@ -5,7 +5,9 @@
 import requests
 import sqlite3
 import pandas as pd
-import api_key
+import api_key # API key can be freely obtained from the EIA.
+
+year_range = [1960,2021] # The first year, followed by one more than the last year
 
 conn = sqlite3.connect("eia.db")
 cur = conn.cursor()
@@ -77,7 +79,7 @@ def add_state_data(state, dataset, table):
     
 # Add some zeros, when they are needed for calculations.
 def add_state_zero(state,table):
-    series_data = [[str(year),"0"] for year in range(1960,2020)]
+    series_data = [[str(year),"0"] for year in range(year_range[0],year_range[1])]
     for i in range(len(series_data)):
         cur.execute("INSERT OR IGNORE INTO "+table+" (State, Year, Value) VALUES ('"+state+"',"+series_data[i][0]+", "+str(series_data[i][1])+");")
     conn.commit()
@@ -163,20 +165,20 @@ def build_tables():
         add_state_data(state,"ESRCB","residential_electricity")
 
     # Rate of electrification as percent of total energy
-    add_quotient_data(electricity, energy, electrification)
+    add_quotient_data("electricity", "energy", "electrification")
     # Electricity price as share of energy price
-    add_quotient_data(electricity,price, energy_price, electricity_price_share)
-    add_quotient(gdp, population, gdp_per_capita)
-    add_quotient(residential_electricity, residential_energy, residential_electrification)
-    add_quotient(commercial_electricity, commercial_energy, commercial_electrification)
-    add_quotient(industrial_electricity, industrial_energy, industrial_electrification)
-    add_quotient(transportation_electricity, transportation_energy, transportation_electrification)
-    add_quotient(electric_electricity, electric_energy, electric_electrification) # Should all be zeroes
-    add_quotient(transportation_energy, energy, transportation_share)
-    add_quotient(industrial_energy, energy, industrial_share)
-    add_quotient(commercial_energy, energy, commercial_share)
-    add_quotient(residential_energy, energy, residential_share)
-    add_quotient(electric_energy, energy, electric_share)
+    add_quotient_data("electricity_price", "energy_price", "electricity_price_share")
+    add_quotient_data("gdp", "population", "gdp_per_capita")
+    add_quotient_data("residential_electricity", "residential_energy", "residential_electrification")
+    add_quotient_data("commercial_electricity", "commercial_energy", "commercial_electrification")
+    add_quotient_data("industrial_electricity", "industrial_energy", "industrial_electrification")
+    add_quotient_data("transportation_electricity", "transportation_energy", "transportation_electrification")
+    add_quotient_data("electric_electricity", "electric_energy", "electric_electrification") # Should all be zeroes
+    add_quotient_data("transportation_energy", "energy", "transportation_share")
+    add_quotient_data("industrial_energy", "energy", "industrial_share")
+    add_quotient_data("commercial_energy", "energy", "commercial_share")
+    add_quotient_data("residential_energy", "energy", "residential_share")
+    add_quotient_data("electric_energy", "energy", "electric_share")
             
     conn.commit()
     
