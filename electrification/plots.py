@@ -188,6 +188,8 @@ def elec_by_sector():
     
     plt.savefig("elec_by_sector.svg")
     plt.clf()    
+    
+# Create image files in this same directory.
 
 electrification_plot()
 electrification_plot_states()

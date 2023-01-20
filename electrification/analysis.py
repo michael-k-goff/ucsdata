@@ -167,8 +167,6 @@ def decomposition_time():
         in_sector_difference2 = sum([df_shares_us[i]["Value"][index+1]*df_elec_us[i]["Value"][index+1]/df_energy_us[i]["Value"][index+1] for i in range(4)]) - \
                                 sum([df_shares_us[i]["Value"][index+1]*df_elec_us[i]["Value"][index]/df_energy_us[i]["Value"][index] for i in range(4)])
         in_sector_diff.append( (in_sector_difference1+in_sector_difference2)/ 2.0 / (df_electrification["Value"][1] - df_electrification["Value"][0]) )
-        #print((in_sector_difference1+in_sector_difference2)/ 2.0 / (df_electrification["Value"][1] - df_electrification["Value"][0]))
-    #print(in_sector_diff)
     print(sum(in_sector_diff)/len(in_sector_diff))
 
 price_elec_regression()
